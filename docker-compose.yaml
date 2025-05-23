@@ -1,71 +1,16 @@
 version: "3.6"
 
 services:
-  sorkin-postgres:
-    image: postgres:15.2-bullseye
-    shm_size: 1g
-    container_name: sorkin-postgres
-    command: [ "postgres", "-c", "log_statement=all" ]
-    networks:
-      - sorkin-network
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    restart: always
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ../package:/docker-entrypoint-initdb.d:rw
     environment:
-      - POSTGRES_INITDB_WALDIR=/var/log/pg_logs
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_DB=${DB_NAME}
-    expose:
-      - ${DB_PORT}
+      POSTGRES_USER: "postgres"
+      POSTGRES_DB: mirea
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_PASSWORD: postgres
     ports:
-      - "${DB_PORT}:${DB_PORT}"
-
-  sorkin-redis:
-    image: redis
-    container_name: sorkin-redis
-    networks:
-      - sorkin-network
-    expose:
-      - 6379
-    ports:
-      - "6379:6379"
-
-  sorkin-app:
-    build: .
-    ports:
-      - "8000:8000"
-    expose:
-      - 8000
-    container_name: sorkin-app
-    networks:
-      - sorkin-network
-    depends_on:
-      - sorkin-postgres
-    environment:
-      - C_FORCE_ROOT='true'
-      - PYTHONUNBUFFERED=1
-      - LOCAL_PYTEST=1
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
-      - DB_PORT=${DB_PORT}
-      - DB_HOST=${DB_HOST}
-      - DEBUG=${DEBUG}
-      - ENVIRONMENT_TYPE=docker
-
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
-      PGADMIN_LISTEN_PORT: 5050
-    ports:
-      - "5050:5050"
-
-networks:
-  sorkin-network:
-    driver: bridge
-
-volumes:
-  postgres_data:
+      - ${DB_PORT}:5432
