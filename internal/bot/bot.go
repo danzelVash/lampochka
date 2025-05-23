@@ -37,6 +37,27 @@ func (b *Bot) VoiceMess(c tele.Context) error {
 	return err
 }
 
+func (b *Bot) Create(c tele.Context) error {
+	//// Создаем меню с устройствами
+	//var deviceButtons []tele.ReplyButton
+	//for _, device := range devices {
+	//	deviceButtons = append(deviceButtons, tele.ReplyButton{Text: device})
+	//}
+	//
+	//replyMarkup := &tele.ReplyMarkup{
+	//	ReplyKeyboard:   [][]tele.ReplyButton{deviceButtons},
+	//	ResizeKeyboard:  true,
+	//	OneTimeKeyboard: true,
+	//}
+	//return c.Send(helpText)
+	return nil
+}
+
+func (b *Bot) OnText(c tele.Context) error {
+	// todo: switch по статусу
+	return nil
+}
+
 func (b *Bot) Start(c tele.Context) error {
 	return c.Send("Привет! Я пример бота на Go. Отправь мне /help для списка команд.")
 }

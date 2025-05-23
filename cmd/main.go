@@ -1,40 +1,25 @@
 package main
 
 import (
-	"log"
-	"time"
+	"context"
 
-	"github.com/danzelVash/lampochka/internal/bot"
+	"github.com/danzelVash/lampochka/internal"
 	tele "gopkg.in/telebot.v3"
 )
 
 func main() {
-	pref := tele.Settings{
-		Token:  "7765937182:AAFRkUKr3iUdxfYWiTJdxeLNMB-5cuF_M6g",
-		Poller: &tele.LongPoller{Timeout: 10 * time.Second},
-	}
+	ctx := context.Background()
+	app := internal.NewApp(ctx)
 
-	botTg, err := tele.NewBot(pref)
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
+	app.TgBot.Handle("/start", app.BotSvc.Start)
 
-	botSvc := bot.New(botTg)
+	app.TgBot.Handle("/help", app.BotSvc.Help)
 
-	botTg.Handle("/start", botSvc.Start)
+	app.TgBot.Handle("/create", app.BotSvc.Create)
 
-	// Обработчик команды /help
-	botTg.Handle("/help", botSvc.Help)
+	app.TgBot.Handle(tele.OnVoice, app.BotSvc.VoiceMess)
 
-	// Обработчик любого аудио сообщения
-	botTg.Handle(tele.OnVoice, botSvc.VoiceMess)
+	app.TgBot.Handle(tele.OnText, app.BotSvc.OnText)
 
-	// Обработчик любого текстового сообщения
-	botTg.Handle(tele.OnText, func(c tele.Context) error {
-		return c.Send("Я не понимаю эту команду. Попробуйте /help")
-	})
-
-	log.Println("Бот запущен...")
-	botTg.Start()
+	app.TgBot.Start()
 }
