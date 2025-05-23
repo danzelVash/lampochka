@@ -7,12 +7,14 @@ require (
 	github.com/go-resty/resty/v2 v2.15.2
 	github.com/jackc/pgx/v5 v5.7.1
 	github.com/samber/lo v1.47.0
+	google.golang.org/appengine v1.6.8
 	google.golang.org/grpc v1.64.1
 	google.golang.org/protobuf v1.33.0
 	gopkg.in/telebot.v3 v3.3.8
 )
 
 require (
+	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
 	github.com/jackc/puddle/v2 v2.2.2 // indirect

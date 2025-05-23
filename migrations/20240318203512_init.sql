@@ -2,7 +2,7 @@
 -- +goose StatementBegin
 create table users
 (
-    tgID bigint primary key,
+    tg_id bigint primary key,
     state bigint not null default 0
 );
 
