@@ -2,11 +2,11 @@ package internal
 
 import (
 	"context"
+	"github.com/danzelVash/lampochka/internal/infrastructure/repo"
 	"log"
 	"time"
 
 	"github.com/danzelVash/lampochka/internal/bot"
-	"github.com/danzelVash/lampochka/internal/repo"
 	"github.com/jackc/pgx/v5"
 	tele "gopkg.in/telebot.v3"
 )
