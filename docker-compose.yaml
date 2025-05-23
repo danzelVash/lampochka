@@ -8,7 +8,7 @@ services:
     container_name: postgres
     restart: always
     volumes:
-      - ../package:/docker-entrypoint-initdb.d:rw
+      - ./migrations:/docker-entrypoint-initdb.d:rw
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_DB: mirea
