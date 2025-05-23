@@ -78,6 +78,19 @@ func (r *Repo) GetCommands(ctx context.Context, tgID int64) ([]Command, error) {
 	return commands, nil
 }
 
+func (r *Repo) GetCommandList(ctx context.Context) ([]Command, error) {
+	var (
+		commands []Command
+		sql      = `select * from command_list;`
+	)
+
+	if err := pgxscan.Select(ctx, r.db, &commands, sql); err != nil {
+		return nil, err
+	}
+
+	return commands, nil
+}
+
 func (r *Repo) CreateDevice(ctx context.Context, tgID int64, device string) error {
 	sql := `
 		insert into devices (tg_id, device_id) values ($1, $2)
