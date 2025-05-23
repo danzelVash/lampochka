@@ -2,9 +2,10 @@ package internal
 
 import (
 	"context"
-	"google.golang.org/grpc/credentials/insecure"
 	"log"
 	"time"
+
+	"google.golang.org/grpc/credentials/insecure"
 
 	"github.com/danzelVash/lampochka/internal/infrastructure/gateway/neuro"
 	yandex_net "github.com/danzelVash/lampochka/internal/infrastructure/gateway/yandex-net"
@@ -59,7 +60,7 @@ func NewApp(ctx context.Context) *App {
 	}
 
 	// pgx
-	conn, err := pgx.Connect(ctx, "postgres://postgres:postgres@localhost:5432/mirea?sslmode=disable")
+	conn, err := pgx.Connect(ctx, "postgres://postgres:postgres@postgres:5432/mirea?sslmode=disable")
 	if err != nil {
 		log.Fatal(err)
 	}
