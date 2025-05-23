@@ -1,10 +1,9 @@
 package main
 
 import (
+	tele "gopkg.in/telebot.v3"
 	"log"
 	"time"
-
-	tele "gopkg.in/telebot.v3"
 )
 
 func main() {
@@ -32,10 +31,10 @@ func main() {
 	// Обработчик команды /help
 	bot.Handle("/help", func(c tele.Context) error {
 		helpText := `Доступные команды:
-/start - начать работу с ботом
-/help - показать это сообщение
-/echo [текст] - повторить текст
-/time - показать текущее время`
+		/start - начать работу с ботом
+		/help - показать это сообщение
+		/echo [текст] - повторить текст
+		/time - показать текущее время`
 		return c.Send(helpText)
 	})
 
