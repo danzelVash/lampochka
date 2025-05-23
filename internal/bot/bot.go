@@ -169,14 +169,13 @@ func (b *Bot) Start(c tele.Context) error {
 	if err := b.repo.CreateUser(context.Background(), c.Sender().ID); err != nil {
 		return err
 	}
-	return c.Send("Привет! Я пример бота на Go. Отправь мне /help для списка команд.")
+	return c.Send("Привет! Я бот, созданный Максимом Нечепоруком, Даней Узяновым и Даней Булыкиным для МИРЭА")
 }
 
 func (b *Bot) Help(c tele.Context) error {
 	helpText := `Доступные команды:
-/start - начать работу с ботом
-/help - показать это сообщение
-/echo [текст] - повторить текст
-/time - показать текущее время`
+/start - Начать работу с ботом
+/addDevice - Добавить устройство
+/createCommand - Добавить сценарий умного устройства`
 	return c.Send(helpText)
 }
