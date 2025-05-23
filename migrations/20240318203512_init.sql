@@ -4,13 +4,13 @@ create table users
 (
     tgID bigint primary key,
     state bigint not null default 0
-)
+);
 
 create table devices
 (
     tg_id      bigint not null,
     device_id text   not null
-)
+);
 
 create table commands
 (
@@ -20,7 +20,7 @@ create table commands
     action text,
     color text,
     done bool not null default false
-)
+);
 -- +goose StatementEnd
 
 -- +goose Down
