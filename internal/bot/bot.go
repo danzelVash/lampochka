@@ -87,7 +87,19 @@ func (b *Bot) AddDevice(c tele.Context) error {
 }
 
 func (b *Bot) OnText(c tele.Context) error {
-	// todo: switch по статусу
+	ctx := context.Background()
+	user, err := b.repo.GetUser(ctx, c.Sender().ID)
+	if err != nil {
+		return err
+	}
+
+	switch user.State {
+	case repo.CreatingDevice:
+		if err = b.CreateDevice(ctx, c); err != nil {
+			return err
+		}
+		return c.Send("Успешно добавили Ваше устройство")
+	}
 	return nil
 }
 

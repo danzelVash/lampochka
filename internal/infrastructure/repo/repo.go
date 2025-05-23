@@ -36,6 +36,25 @@ func (r *Repo) CreateUser(ctx context.Context, tgID int64) error {
 	return err
 }
 
+func (r *Repo) GetUser(ctx context.Context, tgID int64) (User, error) {
+	var (
+		user User
+		sql  = `
+			select * from users where tg_id = $1
+		`
+	)
+	if err := pgxscan.Get(ctx, r.db, &user, sql, tgID); err != nil {
+		if pgxscan.NotFound(err) {
+			if err = r.CreateUser(ctx, tgID); err != nil {
+				return User{}, err
+			}
+			return r.GetUser(ctx, tgID)
+		}
+		return User{}, err
+	}
+	return user, nil
+}
+
 func (r *Repo) ChangeState(ctx context.Context, tgID int64, state State) error {
 	sql := `
 		update users set state = $1 where tg_id = $2
