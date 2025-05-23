@@ -3,6 +3,7 @@ package yandex_net
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/danzelVash/lampochka/internal/infrastructure/gateway/yandex-net/dto"
 	"github.com/danzelVash/lampochka/internal/infrastructure/gateway/yandex-net/dto/on_off"
 	"github.com/go-resty/resty/v2"
@@ -25,6 +26,8 @@ func NewGateway() *Gateway {
 }
 
 func (g Gateway) OnOffDevice(ctx context.Context, id string, value bool) error {
+	fmt.Printf("[YANDEX GATEWAY] OnOffDevice, ID:%s\n", id)
+
 	_, err := g.client.R().SetContext(ctx).SetHeader("Authorization", token).
 		SetBody(on_off.New(id, value)).
 		Post(onOffEndpoint)
@@ -32,6 +35,8 @@ func (g Gateway) OnOffDevice(ctx context.Context, id string, value bool) error {
 }
 
 func (g Gateway) Devices(ctx context.Context) (devices dto.Devices, err error) {
+	fmt.Printf("[YANDEX GATEWAY] Devices\n")
+
 	response, err := g.client.R().SetContext(ctx).SetHeader("Authorization", token).
 		Get(devicesEndpoint)
 	if err != nil {

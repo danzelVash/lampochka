@@ -28,6 +28,8 @@ func New(tgBot *tele.Bot, neuro *neuro.Gateway, yandex *yandex_net.Gateway, repo
 }
 
 func (b *Bot) VoiceMess(c tele.Context) error {
+	fmt.Println("дернулась ручка VoiceMess\n")
+
 	voice := c.Message().Voice
 
 	file, err := b.tgBot.FileByID(voice.FileID)
@@ -63,6 +65,8 @@ func (b *Bot) VoiceMess(c tele.Context) error {
 
 func (b *Bot) AddDevice(c tele.Context) error {
 	ctx := context.Background()
+	fmt.Println("дернулась ручка AddDevice\n")
+
 	devices, err := b.yandex.Devices(ctx)
 	if err != nil {
 		return err
@@ -88,6 +92,8 @@ func (b *Bot) AddDevice(c tele.Context) error {
 
 func (b *Bot) CreateCommand(c tele.Context) error {
 	ctx := context.Background()
+	fmt.Println("дернулась ручка CreateCommand\n")
+
 	devices, err := b.yandex.Devices(ctx)
 	if err != nil {
 		return err
@@ -113,6 +119,8 @@ func (b *Bot) CreateCommand(c tele.Context) error {
 
 func (b *Bot) CreateAction(c tele.Context) error {
 	ctx := context.Background()
+	fmt.Println("дернулась ручка CreateAction\n")
+
 	actions, err := b.repo.GetCommandList(ctx)
 	if err != nil {
 		return err
@@ -134,6 +142,8 @@ func (b *Bot) CreateAction(c tele.Context) error {
 
 func (b *Bot) OnText(c tele.Context) error {
 	ctx := context.Background()
+	fmt.Println("дернулась ручка OnText\n")
+
 	user, err := b.repo.GetUser(ctx, c.Sender().ID)
 	if err != nil {
 		return err
@@ -166,6 +176,8 @@ func (b *Bot) OnText(c tele.Context) error {
 }
 
 func (b *Bot) Start(c tele.Context) error {
+	fmt.Println("дернулась ручка Start\n")
+
 	if err := b.repo.CreateUser(context.Background(), c.Sender().ID); err != nil {
 		return err
 	}
@@ -173,6 +185,8 @@ func (b *Bot) Start(c tele.Context) error {
 }
 
 func (b *Bot) Help(c tele.Context) error {
+	fmt.Println("дернулась ручка Help\n")
+
 	helpText := `Доступные команды:
 /start - Начать работу с ботом
 /addDevice - Добавить устройство

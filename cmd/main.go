@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/danzelVash/lampochka/internal"
 	tele "gopkg.in/telebot.v3"
@@ -9,6 +10,7 @@ import (
 
 func main() {
 	ctx := context.Background()
+	fmt.Println("Старт сервера")
 	app := internal.NewApp(ctx)
 	app.Init()
 
