@@ -2,11 +2,12 @@ package internal
 
 import (
 	"context"
+	"log"
+	"time"
+
 	"github.com/danzelVash/lampochka/internal/infrastructure/gateway/neuro"
 	yandex_net "github.com/danzelVash/lampochka/internal/infrastructure/gateway/yandex-net"
 	"github.com/danzelVash/lampochka/internal/infrastructure/repo"
-	"log"
-	"time"
 
 	"github.com/georgysavva/scany/v2/dbscan"
 	"github.com/georgysavva/scany/v2/pgxscan"
@@ -62,15 +63,15 @@ func NewApp(ctx context.Context) *App {
 		log.Fatal(err)
 	}
 
-	// neuro gate
-	neuroConn, err := googlegrpc.NewClient("localhost:7002")
-	if err != nil {
-		log.Fatal(err)
-	}
+	//// neuro gate
+	//neuroConn, err := googlegrpc.NewClient("localhost:7002")
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
 
 	return &App{
 		TgBot:     botTg,
-		neuroConn: neuroConn,
+		neuroConn: nil,
 		pgxConn:   conn,
 	}
 }

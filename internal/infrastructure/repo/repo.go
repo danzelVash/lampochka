@@ -13,9 +13,9 @@ const (
 	CreatingDevice State = 1
 
 	CreatingCommandDevice State = 2
-	CreatingCommandVoice  State = 2
-	CreatingCommandAction State = 2
-	CreatingCommandColor  State = 2
+	CreatingCommandVoice  State = 3
+	CreatingCommandAction State = 4
+	CreatingCommandColor  State = 5
 )
 
 type Repo struct {
@@ -30,7 +30,7 @@ func New(db *pgx.Conn) *Repo {
 
 func (r *Repo) ChangeState(ctx context.Context, tgID int64, state State) error {
 	sql := `
-		update users set state = $1 where id = $2
+		update users set state = $1 where tg_id = $2
 	`
 	_, err := r.db.Exec(ctx, sql, state, tgID)
 	return err

@@ -2,13 +2,13 @@ package bot
 
 import (
 	"context"
+	"io"
+
 	"github.com/danzelVash/lampochka/internal/infrastructure/gateway/neuro"
 	"github.com/danzelVash/lampochka/internal/infrastructure/gateway/neuro/dto"
 	yandex_net "github.com/danzelVash/lampochka/internal/infrastructure/gateway/yandex-net"
 	"github.com/danzelVash/lampochka/internal/infrastructure/repo"
 	"github.com/samber/lo"
-	"io"
-
 	tele "gopkg.in/telebot.v3"
 )
 
@@ -56,20 +56,29 @@ func (b *Bot) VoiceMess(c tele.Context) error {
 	}))
 }
 
-func (b *Bot) Create(c tele.Context) error {
-	//// Создаем меню с устройствами
-	//var deviceButtons []tele.ReplyButton
-	//for _, device := range devices {
-	//	deviceButtons = append(deviceButtons, tele.ReplyButton{Text: device})
-	//}
-	//
-	//replyMarkup := &tele.ReplyMarkup{
-	//	ReplyKeyboard:   [][]tele.ReplyButton{deviceButtons},
-	//	ResizeKeyboard:  true,
-	//	OneTimeKeyboard: true,
-	//}
-	//return c.Send(helpText)
-	return nil
+func (b *Bot) AddDevice(c tele.Context) error {
+	ctx := context.Background()
+	devices, err := b.yandex.Devices(ctx)
+	if err != nil {
+		return err
+	}
+
+	var deviceButtons []tele.ReplyButton
+	for _, device := range devices.Devices {
+		deviceButtons = append(deviceButtons, tele.ReplyButton{Text: device.Name})
+	}
+
+	replyMarkup := &tele.ReplyMarkup{
+		ReplyKeyboard:   [][]tele.ReplyButton{deviceButtons},
+		ResizeKeyboard:  true,
+		OneTimeKeyboard: true,
+	}
+
+	if err = b.repo.ChangeState(ctx, c.Sender().ID, repo.CreatingDevice); err != nil {
+		return err
+	}
+
+	return c.Send("Выберите устройство", replyMarkup)
 }
 
 func (b *Bot) OnText(c tele.Context) error {

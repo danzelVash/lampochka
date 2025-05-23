@@ -10,12 +10,13 @@ import (
 func main() {
 	ctx := context.Background()
 	app := internal.NewApp(ctx)
+	app.Init()
 
 	app.TgBot.Handle("/start", app.BotSvc.Start)
 
 	app.TgBot.Handle("/help", app.BotSvc.Help)
 
-	app.TgBot.Handle("/create", app.BotSvc.Create)
+	app.TgBot.Handle("/addDevice", app.BotSvc.AddDevice)
 
 	app.TgBot.Handle(tele.OnVoice, app.BotSvc.VoiceMess)
 
