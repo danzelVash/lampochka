@@ -20,6 +20,7 @@ func main() {
 
 	app.TgBot.Handle("/createCommand", app.BotSvc.CreateCommand)
 
+	app.TgBot.Handle("/addCommand", app.BotSvc.CreateCommand)
 	app.TgBot.Handle(tele.OnVoice, app.BotSvc.VoiceMess)
 
 	app.TgBot.Handle(tele.OnText, app.BotSvc.OnText)

@@ -12,10 +12,14 @@ create table devices
     device_id text   not null
 );
 
+create table command_list (
+   action text
+);
+
 create table commands
 (
-    tg_id bigint   not null,
-    device_id text not null ,
+    tg_id bigint not null,
+    device_id text ,
     command text ,
     action text,
     color text,
