@@ -13,9 +13,10 @@ const (
 	CreatingDevice State = 1
 
 	CreatingCommandDevice State = 2
-	CreatingCommandVoice  State = 3
-	CreatingCommandAction State = 4
-	CreatingCommandColor  State = 5
+	CreatingCommandAction State = 3
+	CreatingCommandColor  State = 4
+	CreatingCommandVoice  State = 5
+	CreatingCommandFinal  State = 6
 )
 
 type Repo struct {
