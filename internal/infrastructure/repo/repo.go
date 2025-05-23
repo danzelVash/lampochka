@@ -28,6 +28,14 @@ func New(db *pgx.Conn) *Repo {
 	}
 }
 
+func (r *Repo) CreateUser(ctx context.Context, tgID int64) error {
+	sql := `
+		insert into users (tg_id) values ($1)
+	`
+	_, err := r.db.Exec(ctx, sql, tgID)
+	return err
+}
+
 func (r *Repo) ChangeState(ctx context.Context, tgID int64, state State) error {
 	sql := `
 		update users set state = $1 where tg_id = $2

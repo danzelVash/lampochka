@@ -87,6 +87,9 @@ func (b *Bot) OnText(c tele.Context) error {
 }
 
 func (b *Bot) Start(c tele.Context) error {
+	if err := b.repo.CreateUser(context.Background(), c.Sender().ID); err != nil {
+		return err
+	}
 	return c.Send("Привет! Я пример бота на Go. Отправь мне /help для списка команд.")
 }
 
