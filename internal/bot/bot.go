@@ -56,6 +56,9 @@ func (b *Bot) VoiceMess(c tele.Context) error {
 	matched, err := b.neuro.GetAudio(context.Background(), lo.Map(commands, func(command repo.Command, _ int) dto.Command {
 		return dto.Command{Name: command.Command}
 	}), bytes)
+	if err != nil {
+		return err
+	}
 
 	return b.yandex.Match(context.Background(), lo.FindOrElse(commands, repo.Command{}, func(command repo.Command) bool {
 		return command.Command == matched.Name
