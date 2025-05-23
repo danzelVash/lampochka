@@ -21,5 +21,9 @@ func (b *Bot) CreateDevice(ctx context.Context, c tele.Context) error {
 		return c.Send("Не нашли такого устройства")
 	}
 
-	return b.repo.CreateDevice(ctx, c.Sender().ID, device.ID)
+	if err = b.repo.CreateDevice(ctx, c.Sender().ID, device.ID); err != nil {
+		return err
+	}
+
+	return b.repo.ChangeState(ctx, c.Sender().ID, 0)
 }
