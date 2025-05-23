@@ -115,7 +115,7 @@ func (r *Repo) CreateCommandText(ctx context.Context, tgID int64, command string
 	sql := `
 		update commands set command = $1, done = true where tg_id = $2 and done is false
 	`
-	_, err := r.db.Exec(ctx, sql, tgID, command)
+	_, err := r.db.Exec(ctx, sql, command, tgID)
 	return err
 }
 
@@ -123,7 +123,7 @@ func (r *Repo) CreateCommandAction(ctx context.Context, tgID int64, action strin
 	sql := `
 		update commands set action = $1 where tg_id = $2 and done is false
 	`
-	_, err := r.db.Exec(ctx, sql, tgID, action)
+	_, err := r.db.Exec(ctx, sql, action, tgID)
 	return err
 }
 

@@ -129,10 +129,6 @@ func (b *Bot) CreateAction(c tele.Context) error {
 		OneTimeKeyboard: true,
 	}
 
-	if err = b.repo.ChangeState(ctx, c.Sender().ID, repo.CreatingCommandAction); err != nil {
-		return err
-	}
-
 	return c.Send("Выберите сценарий", replyMarkup)
 }
 
@@ -153,8 +149,12 @@ func (b *Bot) OnText(c tele.Context) error {
 		if err = b.CreateCommandDevice(ctx, c); err != nil {
 			return err
 		}
-		return c.Send("Выберите действие")
+		return b.CreateAction(c)
 	case repo.CreatingCommandAction:
+		if err = b.CreateCommandAction(ctx, c); err != nil {
+			return err
+		}
+		return c.Send("Как хотите вызывать команду?")
 	case repo.CreatingCommandText:
 		if err = b.CreateCommandText(ctx, c); err != nil {
 			return err

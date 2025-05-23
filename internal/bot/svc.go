@@ -49,16 +49,32 @@ func (b *Bot) CreateCommandDevice(ctx context.Context, c tele.Context) error {
 	return b.repo.ChangeState(ctx, c.Sender().ID, repo.CreatingCommandAction)
 }
 
+func (b *Bot) CreateCommandAction(ctx context.Context, c tele.Context) error {
+	actions, err := b.repo.GetCommandList(ctx)
+	if err != nil {
+		return err
+	}
+
+	_, ok := lo.Find(actions, func(act repo.Command) bool {
+		return act.Action == c.Message().Text
+	})
+	if !ok {
+		return c.Send("Не нашли такого сценария")
+	}
+
+	if err = b.repo.CreateCommandAction(ctx, c.Sender().ID, c.Message().Text); err != nil {
+		return err
+	}
+
+	return b.repo.ChangeState(ctx, c.Sender().ID, repo.CreatingCommandText)
+}
+
 func (b *Bot) CreateCommandText(ctx context.Context, c tele.Context) error {
 	if err := b.repo.CreateCommandText(ctx, c.Sender().ID, c.Message().Text); err != nil {
 		return err
 	}
 
 	return b.repo.ChangeState(ctx, c.Sender().ID, 0)
-}
-
-func (b *Bot) CreateCommandAction(ctx context.Context, c tele.Context) error {
-	return nil
 }
 
 // 1. добавить устройство
