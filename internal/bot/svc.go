@@ -49,6 +49,14 @@ func (b *Bot) CreateCommandDevice(ctx context.Context, c tele.Context) error {
 	return b.repo.ChangeState(ctx, c.Sender().ID, repo.CreatingCommandAction)
 }
 
+func (b *Bot) CreateCommandText(ctx context.Context, c tele.Context) error {
+	if err := b.repo.CreateCommandText(ctx, c.Sender().ID, c.Message().Text); err != nil {
+		return err
+	}
+
+	return b.repo.ChangeState(ctx, c.Sender().ID, 0)
+}
+
 func (b *Bot) CreateCommandAction(ctx context.Context, c tele.Context) error {
 	return nil
 }

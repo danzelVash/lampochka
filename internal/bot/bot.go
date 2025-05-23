@@ -155,10 +155,12 @@ func (b *Bot) OnText(c tele.Context) error {
 		}
 		return c.Send("Выберите действие")
 	case repo.CreatingCommandAction:
+	case repo.CreatingCommandText:
+		if err = b.CreateCommandText(ctx, c); err != nil {
+			return err
+		}
 
-	case repo.CreatingCommandColor:
-	case repo.CreatingCommandVoice:
-	case repo.CreatingCommandFinal:
+		return c.Send("Ваш сценарий успешно заведен")
 	}
 	return nil
 }
