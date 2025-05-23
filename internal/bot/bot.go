@@ -2,6 +2,8 @@ package bot
 
 import (
 	"fmt"
+	"github.com/danzelVash/lampochka/internal/infrastructure/gateway/neuro"
+	"github.com/danzelVash/lampochka/internal/infrastructure/repo"
 	"io"
 
 	tele "gopkg.in/telebot.v3"
@@ -9,10 +11,13 @@ import (
 
 type Bot struct {
 	tgBot *tele.Bot
+
+	neuro *neuro.Gateway
+	repo  *repo.Repo
 }
 
-func New(tgBot *tele.Bot) *Bot {
-	return &Bot{tgBot: tgBot}
+func New(tgBot *tele.Bot, neuro *neuro.Gateway, repo *repo.Repo) *Bot {
+	return &Bot{tgBot: tgBot, neuro: neuro, repo: repo}
 }
 
 func (b *Bot) VoiceMess(c tele.Context) error {

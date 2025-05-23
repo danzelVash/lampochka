@@ -38,6 +38,9 @@ type App struct {
 	TgBot  *tele.Bot
 	Repo   *repo.Repo
 
+	neuroConn *googlegrpc.ClientConn
+	pgxConn   *pgx.Conn
+
 	Neuro     *neuro.Gateway
 	YandexNet *yandex_net.Gateway
 }
@@ -53,6 +56,7 @@ func NewApp(ctx context.Context) *App {
 		log.Fatal(err)
 	}
 
+	// pgx
 	conn, err := pgx.Connect(ctx, "postgres://postgres:postgres@localhost:5432/mirea?sslmode=disable")
 	if err != nil {
 		log.Fatal(err)
@@ -65,10 +69,14 @@ func NewApp(ctx context.Context) *App {
 	}
 
 	return &App{
-		BotSvc:    bot.New(botTg),
 		TgBot:     botTg,
-		Repo:      repo.New(conn),
-		YandexNet: yandex_net.NewGateway(),
-		Neuro:     neuro.NewGateway(neuro.NewExternalClient(neuroConn)),
+		neuroConn: neuroConn,
+		pgxConn:   conn,
 	}
+}
+
+func (a *App) Init() {
+	a.Repo = repo.New(a.pgxConn)
+	a.Neuro = neuro.NewGateway(neuro.NewExternalClient(a.neuroConn))
+	a.BotSvc = bot.New(a.TgBot, a.Neuro, a.Repo)
 }
