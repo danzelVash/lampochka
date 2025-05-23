@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package neuro;
 
+option go_package="github.com/danzelVash/lampochka/proto";
+
 service AudioRecognizer{
   rpc GetAudio (GetAudioRequest) returns (GetAudioResponse) {}
 }
