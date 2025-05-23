@@ -2,6 +2,7 @@ package internal
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -49,6 +50,7 @@ type App struct {
 }
 
 func NewApp(ctx context.Context) *App {
+	fmt.Println("Инициализация бота\n")
 	pref := tele.Settings{
 		Token:  "7765937182:AAFRkUKr3iUdxfYWiTJdxeLNMB-5cuF_M6g",
 		Poller: &tele.LongPoller{Timeout: 10 * time.Second},
@@ -59,12 +61,14 @@ func NewApp(ctx context.Context) *App {
 		log.Fatal(err)
 	}
 
+	fmt.Println("Инициализация постгреса\n")
 	// pgx
 	conn, err := pgx.Connect(ctx, "postgres://postgres:postgres@postgres:5432/mirea?sslmode=disable")
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	fmt.Println("Инициализация клиента НЕЙРО\n")
 	// neuro gate
 	neuroConn, err := googlegrpc.NewClient("localhost:8000",
 		googlegrpc.WithTransportCredentials(insecure.NewCredentials()))
@@ -80,6 +84,8 @@ func NewApp(ctx context.Context) *App {
 }
 
 func (a *App) Init() {
+	fmt.Println("ИНИТ \n")
+
 	a.Repo = repo.New(a.pgxConn)
 	a.YandexNet = yandex_net.NewGateway()
 	a.Neuro = neuro.NewGateway(neuro.NewExternalClient(a.neuroConn))

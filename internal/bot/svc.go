@@ -2,6 +2,7 @@ package bot
 
 import (
 	"context"
+	"fmt"
 
 	dto2 "github.com/danzelVash/lampochka/internal/infrastructure/gateway/yandex-net/dto"
 	"github.com/danzelVash/lampochka/internal/infrastructure/repo"
@@ -10,6 +11,8 @@ import (
 )
 
 func (b *Bot) CreateDevice(ctx context.Context, c tele.Context) error {
+	fmt.Printf("[Service] CreateDevice\n")
+
 	devices, err := b.yandex.Devices(ctx)
 	if err != nil {
 		return err
@@ -30,6 +33,8 @@ func (b *Bot) CreateDevice(ctx context.Context, c tele.Context) error {
 }
 
 func (b *Bot) CreateCommandDevice(ctx context.Context, c tele.Context) error {
+	fmt.Printf("[Service] CreateCommandDevice\n")
+
 	devices, err := b.yandex.Devices(ctx)
 	if err != nil {
 		return err
@@ -50,6 +55,8 @@ func (b *Bot) CreateCommandDevice(ctx context.Context, c tele.Context) error {
 }
 
 func (b *Bot) CreateCommandAction(ctx context.Context, c tele.Context) error {
+	fmt.Printf("[Service] CreateCommandAction\n")
+
 	actions, err := b.repo.GetCommandList(ctx)
 	if err != nil {
 		return err
@@ -70,12 +77,11 @@ func (b *Bot) CreateCommandAction(ctx context.Context, c tele.Context) error {
 }
 
 func (b *Bot) CreateCommandText(ctx context.Context, c tele.Context) error {
+	fmt.Printf("[Service] CreateCommandText\n")
+
 	if err := b.repo.CreateCommandText(ctx, c.Sender().ID, c.Message().Text); err != nil {
 		return err
 	}
 
 	return b.repo.ChangeState(ctx, c.Sender().ID, 0)
 }
-
-// 1. добавить устройство
-//  -
