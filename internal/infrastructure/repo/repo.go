@@ -14,9 +14,7 @@ const (
 
 	CreatingCommandDevice State = 2
 	CreatingCommandAction State = 3
-	CreatingCommandColor  State = 4
-	CreatingCommandVoice  State = 5
-	CreatingCommandFinal  State = 6
+	CreatingCommandText   State = 4
 )
 
 type Repo struct {
@@ -113,9 +111,9 @@ func (r *Repo) CreateCommandDevice(ctx context.Context, tgID int64, device strin
 	return err
 }
 
-func (r *Repo) CreateCommandVoice(ctx context.Context, tgID int64, command string) error {
+func (r *Repo) CreateCommandText(ctx context.Context, tgID int64, command string) error {
 	sql := `
-		update commands set command = $1 where tg_id = $2 and done is false
+		update commands set command = $1, done = true where tg_id = $2 and done is false
 	`
 	_, err := r.db.Exec(ctx, sql, tgID, command)
 	return err
