@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 
+	"github.com/georgysavva/scany/v2/pgxscan"
 	"github.com/jackc/pgx/v5"
 )
 
@@ -35,9 +36,24 @@ func (r *Repo) ChangeState(ctx context.Context, tgID int64, state State) error {
 	return err
 }
 
+func (r *Repo) GetCommands(ctx context.Context, tgID int64) ([]Command, error) {
+	var (
+		commands []Command
+		sql      = `
+			select * from commands where tg_id = $1 and done is true
+		`
+	)
+
+	if err := pgxscan.Select(ctx, r.db, &commands, sql, tgID); err != nil {
+		return nil, err
+	}
+
+	return commands, nil
+}
+
 func (r *Repo) CreateDevice(ctx context.Context, tgID int64, device string) error {
 	sql := `
-		insert into devices (user, device_id) values ($1, $2)
+		insert into devices (tg_id, device_id) values ($1, $2)
 	`
 	_, err := r.db.Exec(ctx, sql, tgID, device)
 	return err
@@ -50,7 +66,7 @@ func (r *Repo) CreateDevice(ctx context.Context, tgID int64, device string) erro
 
 func (r *Repo) CreateCommandDevice(ctx context.Context, tgID int64, device string) error {
 	sql := `
-		insert into commands (user, device_id) values ($1, $2)
+		insert into commands (tg_id, device_id) values ($1, $2)
 	`
 	_, err := r.db.Exec(ctx, sql, tgID, device)
 	return err
@@ -58,7 +74,7 @@ func (r *Repo) CreateCommandDevice(ctx context.Context, tgID int64, device strin
 
 func (r *Repo) CreateCommandVoice(ctx context.Context, tgID int64, command string) error {
 	sql := `
-		update commands set command = $1 where user = $2 and done is false
+		update commands set command = $1 where tg_id = $2 and done is false
 	`
 	_, err := r.db.Exec(ctx, sql, tgID, command)
 	return err
@@ -66,7 +82,7 @@ func (r *Repo) CreateCommandVoice(ctx context.Context, tgID int64, command strin
 
 func (r *Repo) CreateCommandAction(ctx context.Context, tgID int64, action string) error {
 	sql := `
-		update commands set action = $1 where user = $2 and done is false
+		update commands set action = $1 where tg_id = $2 and done is false
 	`
 	_, err := r.db.Exec(ctx, sql, tgID, action)
 	return err
@@ -74,7 +90,7 @@ func (r *Repo) CreateCommandAction(ctx context.Context, tgID int64, action strin
 
 func (r *Repo) CreateCommandColor(ctx context.Context, tgID int64, color string) error {
 	sql := `
-		update commands set color = $1 where user = $2 and done is false
+		update commands set color = $1 where tg_id = $2 and done is false
 	`
 	_, err := r.db.Exec(ctx, sql, tgID, color)
 	return err
@@ -82,7 +98,7 @@ func (r *Repo) CreateCommandColor(ctx context.Context, tgID int64, color string)
 
 func (r *Repo) CreateCommandDone(ctx context.Context, tgID int64) error {
 	sql := `
-		update commands set done = true where user = $2 and done is false
+		update commands set done = true where tg_id = $2 and done is false
 	`
 	_, err := r.db.Exec(ctx, sql, tgID)
 	return err
