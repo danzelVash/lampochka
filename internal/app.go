@@ -2,14 +2,32 @@ package internal
 
 import (
 	"context"
-	"github.com/danzelVash/lampochka/internal/infrastructure/repo"
 	"log"
 	"time"
+
+	"github.com/danzelVash/lampochka/internal/infrastructure/repo"
+	"github.com/georgysavva/scany/v2/dbscan"
+	"github.com/georgysavva/scany/v2/pgxscan"
 
 	"github.com/danzelVash/lampochka/internal/bot"
 	"github.com/jackc/pgx/v5"
 	tele "gopkg.in/telebot.v3"
 )
+
+func init() {
+	// ignore db columns that doesn't exist at the destination
+	dbscanAPI, err := pgxscan.NewDBScanAPI(dbscan.WithAllowUnknownColumns(true))
+	if err != nil {
+		panic(err)
+	}
+
+	api, err := pgxscan.NewAPI(dbscanAPI)
+	if err != nil {
+		panic(err)
+	}
+
+	pgxscan.DefaultAPI = api
+}
 
 type App struct {
 	BotSvc *bot.Bot
