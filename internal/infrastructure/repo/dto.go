@@ -5,7 +5,6 @@ type Command struct {
 	Device  string `db:"device_id" json:"device_id"`
 	Command string `db:"command" json:"command"`
 	Action  string `db:"action" json:"action"`
-	Color   string `db:"color" json:"color"`
 }
 
 type User struct {

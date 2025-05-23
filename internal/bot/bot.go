@@ -10,8 +10,6 @@ import (
 	yandex_net "github.com/danzelVash/lampochka/internal/infrastructure/gateway/yandex-net"
 	"github.com/danzelVash/lampochka/internal/infrastructure/repo"
 	"github.com/samber/lo"
-	"google.golang.org/appengine/log"
-
 	tele "gopkg.in/telebot.v3"
 )
 
@@ -30,6 +28,14 @@ func New(tgBot *tele.Bot, neuro *neuro.Gateway, yandex *yandex_net.Gateway, repo
 func (b *Bot) VoiceMess(c tele.Context) error {
 	fmt.Println("дернулась ручка VoiceMess\n")
 
+	commands, err := b.repo.GetCommands(context.Background(), c.Chat().ID)
+	if err != nil {
+		return err
+	}
+	if len(commands) == 0 {
+		return c.Send("У вас нет ни одного сценария")
+	}
+
 	voice := c.Message().Voice
 
 	file, err := b.tgBot.FileByID(voice.FileID)
@@ -47,16 +53,9 @@ func (b *Bot) VoiceMess(c tele.Context) error {
 		return err
 	}
 
-	commands, err := b.repo.GetCommands(context.Background(), c.Chat().ID)
-	if err != nil {
-		return err
-	}
-
 	matched, err := b.neuro.GetAudio(context.Background(), lo.Map(commands, func(command repo.Command, _ int) dto.Command {
 		return dto.Command{Name: command.Command}
 	}), bytes)
-
-	log.Infof(context.Background(), fmt.Sprintf("Подобранный сценарий: %s", matched))
 
 	return b.yandex.Match(context.Background(), lo.FindOrElse(commands, repo.Command{}, func(command repo.Command) bool {
 		return command.Command == matched.Name

@@ -33,6 +33,7 @@ func (r *Repo) CreateUser(ctx context.Context, tgID int64) error {
 
 	sql := `
 		insert into users (tg_id) values ($1)
+		on conflict (tg_id) do nothing
 	`
 	_, err := r.db.Exec(ctx, sql, tgID)
 	return err
