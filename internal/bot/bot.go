@@ -2,11 +2,13 @@ package bot
 
 import (
 	"context"
+	"fmt"
 	"github.com/danzelVash/lampochka/internal/infrastructure/gateway/neuro"
 	"github.com/danzelVash/lampochka/internal/infrastructure/gateway/neuro/dto"
 	yandex_net "github.com/danzelVash/lampochka/internal/infrastructure/gateway/yandex-net"
 	"github.com/danzelVash/lampochka/internal/infrastructure/repo"
 	"github.com/samber/lo"
+	"google.golang.org/appengine/log"
 	"io"
 
 	tele "gopkg.in/telebot.v3"
@@ -50,6 +52,8 @@ func (b *Bot) VoiceMess(c tele.Context) error {
 	matched, err := b.neuro.GetAudio(context.Background(), lo.Map(commands, func(command repo.Command, _ int) dto.Command {
 		return dto.Command{Name: command.Command}
 	}), bytes)
+
+	log.Infof(context.Background(), fmt.Sprintf("Подобранный сценарий: %s", matched))
 
 	return b.yandex.Match(context.Background(), lo.FindOrElse(commands, repo.Command{}, func(command repo.Command) bool {
 		return command.Command == matched.Name
