@@ -111,6 +111,31 @@ func (b *Bot) CreateCommand(c tele.Context) error {
 	return c.Send("Выберите устройство для сценария", replyMarkup)
 }
 
+func (b *Bot) CreateAction(c tele.Context) error {
+	ctx := context.Background()
+	actions, err := b.repo.GetCommandList(ctx)
+	if err != nil {
+		return err
+	}
+
+	var actionButtons []tele.ReplyButton
+	for _, action := range actions {
+		actionButtons = append(actionButtons, tele.ReplyButton{Text: action.Action})
+	}
+
+	replyMarkup := &tele.ReplyMarkup{
+		ReplyKeyboard:   [][]tele.ReplyButton{actionButtons},
+		ResizeKeyboard:  true,
+		OneTimeKeyboard: true,
+	}
+
+	if err = b.repo.ChangeState(ctx, c.Sender().ID, repo.CreatingCommandAction); err != nil {
+		return err
+	}
+
+	return c.Send("Выберите сценарий", replyMarkup)
+}
+
 func (b *Bot) OnText(c tele.Context) error {
 	ctx := context.Background()
 	user, err := b.repo.GetUser(ctx, c.Sender().ID)
@@ -128,9 +153,9 @@ func (b *Bot) OnText(c tele.Context) error {
 		if err = b.CreateCommandDevice(ctx, c); err != nil {
 			return err
 		}
-
 		return c.Send("Выберите действие")
 	case repo.CreatingCommandAction:
+
 	case repo.CreatingCommandColor:
 	case repo.CreatingCommandVoice:
 	case repo.CreatingCommandFinal:

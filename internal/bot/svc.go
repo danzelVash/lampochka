@@ -49,5 +49,9 @@ func (b *Bot) CreateCommandDevice(ctx context.Context, c tele.Context) error {
 	return b.repo.ChangeState(ctx, c.Sender().ID, repo.CreatingCommandAction)
 }
 
+func (b *Bot) CreateCommandAction(ctx context.Context, c tele.Context) error {
+	return nil
+}
+
 // 1. добавить устройство
 //  -
