@@ -11,7 +11,6 @@ import (
 	"github.com/danzelVash/lampochka/internal/infrastructure/repo"
 	"github.com/samber/lo"
 	"google.golang.org/appengine/log"
-	"io"
 
 	tele "gopkg.in/telebot.v3"
 )

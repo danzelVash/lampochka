@@ -2,6 +2,7 @@ package internal
 
 import (
 	"context"
+	"google.golang.org/grpc/credentials/insecure"
 	"log"
 	"time"
 
@@ -63,15 +64,16 @@ func NewApp(ctx context.Context) *App {
 		log.Fatal(err)
 	}
 
-	//// neuro gate
-	//neuroConn, err := googlegrpc.NewClient("localhost:7002")
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
+	// neuro gate
+	neuroConn, err := googlegrpc.NewClient("localhost:8000",
+		googlegrpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	return &App{
 		TgBot:     botTg,
-		neuroConn: nil,
+		neuroConn: neuroConn,
 		pgxConn:   conn,
 	}
 }
