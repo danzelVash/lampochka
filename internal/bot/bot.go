@@ -1,9 +1,12 @@
 package bot
 
 import (
-	"fmt"
+	"context"
 	"github.com/danzelVash/lampochka/internal/infrastructure/gateway/neuro"
+	"github.com/danzelVash/lampochka/internal/infrastructure/gateway/neuro/dto"
+	yandex_net "github.com/danzelVash/lampochka/internal/infrastructure/gateway/yandex-net"
 	"github.com/danzelVash/lampochka/internal/infrastructure/repo"
+	"github.com/samber/lo"
 	"io"
 
 	tele "gopkg.in/telebot.v3"
@@ -12,12 +15,13 @@ import (
 type Bot struct {
 	tgBot *tele.Bot
 
-	neuro *neuro.Gateway
-	repo  *repo.Repo
+	neuro  *neuro.Gateway
+	yandex *yandex_net.Gateway
+	repo   *repo.Repo
 }
 
-func New(tgBot *tele.Bot, neuro *neuro.Gateway, repo *repo.Repo) *Bot {
-	return &Bot{tgBot: tgBot, neuro: neuro, repo: repo}
+func New(tgBot *tele.Bot, neuro *neuro.Gateway, yandex *yandex_net.Gateway, repo *repo.Repo) *Bot {
+	return &Bot{tgBot: tgBot, neuro: neuro, yandex: yandex, repo: repo}
 }
 
 func (b *Bot) VoiceMess(c tele.Context) error {
@@ -38,8 +42,18 @@ func (b *Bot) VoiceMess(c tele.Context) error {
 		return err
 	}
 
-	fmt.Println(string(bytes))
-	return err
+	commands, err := b.repo.GetCommands(context.Background(), c.Chat().ID)
+	if err != nil {
+		return err
+	}
+
+	matched, err := b.neuro.GetAudio(context.Background(), lo.Map(commands, func(command repo.Command, _ int) dto.Command {
+		return dto.Command{Name: command.Command}
+	}), bytes)
+
+	return b.yandex.Match(context.Background(), lo.FindOrElse(commands, repo.Command{}, func(command repo.Command) bool {
+		return command.Command == matched.Name
+	}))
 }
 
 func (b *Bot) Create(c tele.Context) error {

@@ -77,6 +77,7 @@ func NewApp(ctx context.Context) *App {
 
 func (a *App) Init() {
 	a.Repo = repo.New(a.pgxConn)
+	a.YandexNet = yandex_net.NewGateway()
 	a.Neuro = neuro.NewGateway(neuro.NewExternalClient(a.neuroConn))
-	a.BotSvc = bot.New(a.TgBot, a.Neuro, a.Repo)
+	a.BotSvc = bot.New(a.TgBot, a.Neuro, a.YandexNet, a.Repo)
 }
