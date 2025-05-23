@@ -2,6 +2,8 @@ package internal
 
 import (
 	"context"
+	"github.com/danzelVash/lampochka/internal/infrastructure/gateway/neuro"
+	yandex_net "github.com/danzelVash/lampochka/internal/infrastructure/gateway/yandex-net"
 	"github.com/danzelVash/lampochka/internal/infrastructure/repo"
 	"log"
 	"time"
@@ -9,12 +11,17 @@ import (
 	"github.com/danzelVash/lampochka/internal/bot"
 	"github.com/jackc/pgx/v5"
 	tele "gopkg.in/telebot.v3"
+
+	googlegrpc "google.golang.org/grpc"
 )
 
 type App struct {
 	BotSvc *bot.Bot
 	TgBot  *tele.Bot
 	Repo   *repo.Repo
+
+	Neuro     *neuro.Gateway
+	YandexNet *yandex_net.Gateway
 }
 
 func NewApp(ctx context.Context) *App {
@@ -33,11 +40,17 @@ func NewApp(ctx context.Context) *App {
 		log.Fatal(err)
 	}
 
-	app := &App{
-		BotSvc: bot.New(botTg),
-		TgBot:  botTg,
-		Repo:   repo.New(conn),
+	// neuro gate
+	neuroConn, err := googlegrpc.NewClient("localhost:7002")
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	return app
+	return &App{
+		BotSvc:    bot.New(botTg),
+		TgBot:     botTg,
+		Repo:      repo.New(conn),
+		YandexNet: yandex_net.NewGateway(),
+		Neuro:     neuro.NewGateway(neuro.NewExternalClient(neuroConn)),
+	}
 }
