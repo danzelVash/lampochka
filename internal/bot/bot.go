@@ -60,9 +60,14 @@ func (b *Bot) VoiceMess(c tele.Context) error {
 		return err
 	}
 
-	return b.yandex.Match(context.Background(), lo.FindOrElse(commands, repo.Command{}, func(command repo.Command) bool {
+	err = b.yandex.Match(context.Background(), lo.FindOrElse(commands, repo.Command{}, func(command repo.Command) bool {
 		return command.Command == matched.Name
 	}))
+	if err != nil {
+		return err
+	}
+
+	return c.Send(fmt.Sprintf("Выполнена команда \"%s\"", matched.Name))
 }
 
 func (b *Bot) AddDevice(c tele.Context) error {
