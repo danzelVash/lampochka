@@ -18,9 +18,9 @@ func main() {
 
 	app.TgBot.Handle("/help", app.BotSvc.Help)
 
-	app.TgBot.Handle("/addDevice", app.BotSvc.AddDevice)
+	app.TgBot.Handle("/adddevice", app.BotSvc.AddDevice)
 
-	app.TgBot.Handle("/createCommand", app.BotSvc.CreateCommand)
+	app.TgBot.Handle("/createcommand", app.BotSvc.CreateCommand)
 
 	app.TgBot.Handle(tele.OnVoice, app.BotSvc.VoiceMess)
 
