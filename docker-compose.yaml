@@ -8,7 +8,8 @@ services:
     container_name: postgres
     restart: always
     volumes:
-      - ../package:/docker-entrypoint-initdb.d:rw
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d:rw
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_DB: mirea
@@ -40,3 +41,6 @@ services:
 networks:
   net:
     driver: bridge
+
+volumes:
+  postgres_data:

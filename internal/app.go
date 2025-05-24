@@ -70,7 +70,7 @@ func NewApp(ctx context.Context) *App {
 
 	fmt.Println("Инициализация клиента НЕЙРО")
 	// neuro gate
-	neuroConn, err := googlegrpc.NewClient("localhost:8000",
+	neuroConn, err := googlegrpc.NewClient("51.250.93.99:8000",
 		googlegrpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatal(err)

@@ -22,7 +22,6 @@ create table commands
     device_id text ,
     command text ,
     action text,
-    color text,
     done bool not null default false
 );
 -- +goose StatementEnd
