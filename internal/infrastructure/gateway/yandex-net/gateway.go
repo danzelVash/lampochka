@@ -26,7 +26,7 @@ func NewGateway() *Gateway {
 }
 
 func (g Gateway) OnOffDevice(ctx context.Context, id string, value bool) error {
-	fmt.Printf("[YANDEX GATEWAY] OnOffDevice, ID:%s\n", id)
+	fmt.Printf("[YANDEX GATEWAY] OnOffDevice, ID:%s", id)
 
 	_, err := g.client.R().SetContext(ctx).SetHeader("Authorization", token).
 		SetBody(on_off.New(id, value)).
@@ -35,7 +35,7 @@ func (g Gateway) OnOffDevice(ctx context.Context, id string, value bool) error {
 }
 
 func (g Gateway) Devices(ctx context.Context) (devices dto.Devices, err error) {
-	fmt.Printf("[YANDEX GATEWAY] Devices\n")
+	fmt.Printf("[YANDEX GATEWAY] Devices")
 
 	response, err := g.client.R().SetContext(ctx).SetHeader("Authorization", token).
 		Get(devicesEndpoint)

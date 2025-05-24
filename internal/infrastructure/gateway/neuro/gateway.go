@@ -22,7 +22,7 @@ func NewGateway(client proto.AudioRecognizerClient) *Gateway {
 }
 
 func (g Gateway) GetAudio(ctx context.Context, commands []dto.Command, audio []byte) (dto.Command, error) {
-	fmt.Printf("[NEOURO GATEWAY] GetAudio, commands:%v\n", commands)
+	fmt.Printf("[NEOURO GATEWAY] GetAudio, commands:%v", commands)
 
 	response, err := g.client.GetAudio(ctx, &proto.GetAudioRequest{
 		Chunk: audio,

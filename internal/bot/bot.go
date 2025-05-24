@@ -28,7 +28,7 @@ func New(tgBot *tele.Bot, neuro *neuro.Gateway, yandex *yandex_net.Gateway, repo
 }
 
 func (b *Bot) VoiceMess(c tele.Context) error {
-	fmt.Println("дернулась ручка VoiceMess\n")
+	fmt.Println("дернулась ручка VoiceMess")
 
 	voice := c.Message().Voice
 
@@ -65,7 +65,7 @@ func (b *Bot) VoiceMess(c tele.Context) error {
 
 func (b *Bot) AddDevice(c tele.Context) error {
 	ctx := context.Background()
-	fmt.Println("дернулась ручка AddDevice\n")
+	fmt.Println("дернулась ручка AddDevice")
 
 	devices, err := b.yandex.Devices(ctx)
 	if err != nil {
@@ -92,7 +92,7 @@ func (b *Bot) AddDevice(c tele.Context) error {
 
 func (b *Bot) CreateCommand(c tele.Context) error {
 	ctx := context.Background()
-	fmt.Println("дернулась ручка CreateCommand\n")
+	fmt.Println("дернулась ручка CreateCommand")
 
 	devices, err := b.yandex.Devices(ctx)
 	if err != nil {
@@ -119,7 +119,7 @@ func (b *Bot) CreateCommand(c tele.Context) error {
 
 func (b *Bot) CreateAction(c tele.Context) error {
 	ctx := context.Background()
-	fmt.Println("дернулась ручка CreateAction\n")
+	fmt.Println("дернулась ручка CreateAction")
 
 	actions, err := b.repo.GetCommandList(ctx)
 	if err != nil {
@@ -142,7 +142,7 @@ func (b *Bot) CreateAction(c tele.Context) error {
 
 func (b *Bot) OnText(c tele.Context) error {
 	ctx := context.Background()
-	fmt.Println("дернулась ручка OnText\n")
+	fmt.Println("дернулась ручка OnText")
 
 	user, err := b.repo.GetUser(ctx, c.Sender().ID)
 	if err != nil {
@@ -176,7 +176,7 @@ func (b *Bot) OnText(c tele.Context) error {
 }
 
 func (b *Bot) Start(c tele.Context) error {
-	fmt.Println("дернулась ручка Start\n")
+	fmt.Println("дернулась ручка Start")
 
 	if err := b.repo.CreateUser(context.Background(), c.Sender().ID); err != nil {
 		return err
@@ -185,7 +185,7 @@ func (b *Bot) Start(c tele.Context) error {
 }
 
 func (b *Bot) Help(c tele.Context) error {
-	fmt.Println("дернулась ручка Help\n")
+	fmt.Println("дернулась ручка Help")
 
 	helpText := `Доступные команды:
 /start - Начать работу с ботом

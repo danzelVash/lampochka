@@ -29,7 +29,7 @@ func New(db *pgx.Conn) *Repo {
 }
 
 func (r *Repo) CreateUser(ctx context.Context, tgID int64) error {
-	fmt.Printf("[REPO] CreateUser - User:%d\n", tgID)
+	fmt.Printf("[REPO] CreateUser - User:%d", tgID)
 
 	sql := `
 		insert into users (tg_id) values ($1)
@@ -39,7 +39,7 @@ func (r *Repo) CreateUser(ctx context.Context, tgID int64) error {
 }
 
 func (r *Repo) GetUser(ctx context.Context, tgID int64) (User, error) {
-	fmt.Printf("[REPO] GetUser - User:%d\n", tgID)
+	fmt.Printf("[REPO] GetUser - User:%d", tgID)
 
 	var (
 		user User
@@ -70,7 +70,7 @@ func (r *Repo) ChangeState(ctx context.Context, tgID int64, state State) error {
 }
 
 func (r *Repo) GetCommands(ctx context.Context, tgID int64) ([]Command, error) {
-	fmt.Printf("[REPO] GetCommands - User:%d\n", tgID)
+	fmt.Printf("[REPO] GetCommands - User:%d", tgID)
 
 	var (
 		commands []Command
@@ -87,7 +87,7 @@ func (r *Repo) GetCommands(ctx context.Context, tgID int64) ([]Command, error) {
 }
 
 func (r *Repo) GetCommandList(ctx context.Context) ([]Command, error) {
-	fmt.Println("[REPO] GetCommandList\n")
+	fmt.Println("[REPO] GetCommandList")
 
 	var (
 		commands []Command
@@ -102,7 +102,7 @@ func (r *Repo) GetCommandList(ctx context.Context) ([]Command, error) {
 }
 
 func (r *Repo) CreateDevice(ctx context.Context, tgID int64, device string) error {
-	fmt.Printf("[REPO] CreateDevice - User:%d\n", tgID)
+	fmt.Printf("[REPO] CreateDevice - User:%d", tgID)
 
 	sql := `
 		insert into devices (tg_id, device_id) values ($1, $2)
@@ -112,7 +112,7 @@ func (r *Repo) CreateDevice(ctx context.Context, tgID int64, device string) erro
 }
 
 func (r *Repo) CreateCommandDevice(ctx context.Context, tgID int64, device string) error {
-	fmt.Printf("[REPO] CreateCommandDevice - User:%d\n", tgID)
+	fmt.Printf("[REPO] CreateCommandDevice - User:%d", tgID)
 
 	sql := `
 		insert into commands (tg_id, device_id) values ($1, $2)
@@ -122,7 +122,7 @@ func (r *Repo) CreateCommandDevice(ctx context.Context, tgID int64, device strin
 }
 
 func (r *Repo) CreateCommandText(ctx context.Context, tgID int64, command string) error {
-	fmt.Printf("[REPO] CreateCommandText - User:%d\n", tgID)
+	fmt.Printf("[REPO] CreateCommandText - User:%d", tgID)
 
 	sql := `
 		update commands set command = $1, done = true where tg_id = $2 and done is false
@@ -132,7 +132,7 @@ func (r *Repo) CreateCommandText(ctx context.Context, tgID int64, command string
 }
 
 func (r *Repo) CreateCommandAction(ctx context.Context, tgID int64, action string) error {
-	fmt.Printf("[REPO] CreateCommandAction - User:%d\n", tgID)
+	fmt.Printf("[REPO] CreateCommandAction - User:%d", tgID)
 
 	sql := `
 		update commands set action = $1 where tg_id = $2 and done is false
@@ -142,7 +142,7 @@ func (r *Repo) CreateCommandAction(ctx context.Context, tgID int64, action strin
 }
 
 func (r *Repo) CreateCommandColor(ctx context.Context, tgID int64, color string) error {
-	fmt.Printf("[REPO] CreateCommandColor - User:%d\n", tgID)
+	fmt.Printf("[REPO] CreateCommandColor - User:%d", tgID)
 
 	sql := `
 		update commands set color = $1 where tg_id = $2 and done is false
@@ -152,7 +152,7 @@ func (r *Repo) CreateCommandColor(ctx context.Context, tgID int64, color string)
 }
 
 func (r *Repo) CreateCommandDone(ctx context.Context, tgID int64) error {
-	fmt.Printf("[REPO] CreateCommandDone - User:%d\n", tgID)
+	fmt.Printf("[REPO] CreateCommandDone - User:%d", tgID)
 
 	sql := `
 		update commands set done = true where tg_id = $2 and done is false

@@ -11,7 +11,7 @@ import (
 )
 
 func (b *Bot) CreateDevice(ctx context.Context, c tele.Context) error {
-	fmt.Printf("[Service] CreateDevice\n")
+	fmt.Printf("[Service] CreateDevice")
 
 	devices, err := b.yandex.Devices(ctx)
 	if err != nil {
@@ -33,7 +33,7 @@ func (b *Bot) CreateDevice(ctx context.Context, c tele.Context) error {
 }
 
 func (b *Bot) CreateCommandDevice(ctx context.Context, c tele.Context) error {
-	fmt.Printf("[Service] CreateCommandDevice\n")
+	fmt.Printf("[Service] CreateCommandDevice")
 
 	devices, err := b.yandex.Devices(ctx)
 	if err != nil {
@@ -55,7 +55,7 @@ func (b *Bot) CreateCommandDevice(ctx context.Context, c tele.Context) error {
 }
 
 func (b *Bot) CreateCommandAction(ctx context.Context, c tele.Context) error {
-	fmt.Printf("[Service] CreateCommandAction\n")
+	fmt.Printf("[Service] CreateCommandAction")
 
 	actions, err := b.repo.GetCommandList(ctx)
 	if err != nil {
@@ -77,7 +77,7 @@ func (b *Bot) CreateCommandAction(ctx context.Context, c tele.Context) error {
 }
 
 func (b *Bot) CreateCommandText(ctx context.Context, c tele.Context) error {
-	fmt.Printf("[Service] CreateCommandText\n")
+	fmt.Printf("[Service] CreateCommandText")
 
 	if err := b.repo.CreateCommandText(ctx, c.Sender().ID, c.Message().Text); err != nil {
 		return err
