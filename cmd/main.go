@@ -18,9 +18,15 @@ func main() {
 
 	app.TgBot.Handle("/help", app.BotSvc.Help)
 
+	app.TgBot.Handle("/exit", app.BotSvc.Help)
+
 	app.TgBot.Handle("/adddevice", app.BotSvc.AddDevice)
 
 	app.TgBot.Handle("/createcommand", app.BotSvc.CreateCommand)
+
+	app.TgBot.Handle("/mycommands", app.BotSvc.MyCommands)
+
+	app.TgBot.Handle("/deletecommand", app.BotSvc.DeleteCommand)
 
 	app.TgBot.Handle(tele.OnVoice, app.BotSvc.VoiceMess)
 

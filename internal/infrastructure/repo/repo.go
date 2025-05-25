@@ -16,6 +16,8 @@ const (
 	CreatingCommandDevice State = 2
 	CreatingCommandAction State = 3
 	CreatingCommandText   State = 4
+
+	DeleteCommand State = 5
 )
 
 type Repo struct {
@@ -127,6 +129,16 @@ func (r *Repo) CreateCommandText(ctx context.Context, tgID int64, command string
 
 	sql := `
 		update commands set command = $1, done = true where tg_id = $2 and done is false
+	`
+	_, err := r.db.Exec(ctx, sql, command, tgID)
+	return err
+}
+
+func (r *Repo) DeleteCommand(ctx context.Context, tgID int64, command string) error {
+	fmt.Printf("[REPO] DeleteCommand - User:%d, Command:%s", tgID, command)
+
+	sql := `
+		delete from commands where command = $1 and tg_id = $2
 	`
 	_, err := r.db.Exec(ctx, sql, command, tgID)
 	return err

@@ -85,3 +85,14 @@ func (b *Bot) CreateCommandText(ctx context.Context, c tele.Context) error {
 
 	return b.repo.ChangeState(ctx, c.Sender().ID, 0)
 }
+
+func (b *Bot) DeleteCommandService(ctx context.Context, c tele.Context) error {
+	fmt.Printf("[Service] DeleteCommandService")
+
+	if err := b.repo.DeleteCommand(ctx, c.Sender().ID, c.Message().Text); err != nil {
+		fmt.Printf("[Service] ошибка удаления сценария %s", err)
+		return err
+	}
+
+	return b.repo.ChangeState(ctx, c.Sender().ID, 0)
+}

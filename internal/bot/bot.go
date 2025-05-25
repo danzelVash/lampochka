@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"strings"
 
 	"github.com/danzelVash/lampochka/internal/infrastructure/gateway/neuro"
 	"github.com/danzelVash/lampochka/internal/infrastructure/gateway/neuro/dto"
@@ -27,8 +28,8 @@ func New(tgBot *tele.Bot, neuro *neuro.Gateway, yandex *yandex_net.Gateway, repo
 
 func (b *Bot) VoiceMess(c tele.Context) error {
 	fmt.Println("дернулась ручка VoiceMess")
-
-	commands, err := b.repo.GetCommands(context.Background(), c.Chat().ID)
+	ctx := context.Background()
+	commands, err := b.repo.GetCommands(ctx, c.Chat().ID)
 	if err != nil {
 		return err
 	}
@@ -53,14 +54,14 @@ func (b *Bot) VoiceMess(c tele.Context) error {
 		return err
 	}
 
-	matched, err := b.neuro.GetAudio(context.Background(), lo.Map(commands, func(command repo.Command, _ int) dto.Command {
+	matched, err := b.neuro.GetAudio(ctx, lo.Map(commands, func(command repo.Command, _ int) dto.Command {
 		return dto.Command{Name: command.Command}
 	}), bytes)
 	if err != nil {
 		return err
 	}
 
-	err = b.yandex.Match(context.Background(), lo.FindOrElse(commands, repo.Command{}, func(command repo.Command) bool {
+	err = b.yandex.Match(ctx, lo.FindOrElse(commands, repo.Command{}, func(command repo.Command) bool {
 		return command.Command == matched.Name
 	}))
 	if err != nil {
@@ -124,6 +125,39 @@ func (b *Bot) CreateCommand(c tele.Context) error {
 	return c.Send("Выберите устройство для сценария", replyMarkup)
 }
 
+func (b *Bot) MyCommands(c tele.Context) error {
+	ctx := context.Background()
+	fmt.Println("дернулась ручка MyCommands")
+
+	commands, err := b.repo.GetCommands(ctx, c.Chat().ID)
+	if err != nil {
+		return err
+	}
+	if len(commands) == 0 {
+		return c.Send("У вас нет ни одного сценария")
+	}
+
+	var message strings.Builder
+	message.WriteString("Список ваших сценариев:\n\n")
+
+	for _, command := range commands {
+		message.WriteString(fmt.Sprintf("%s - %s\n", command.Command, command.Action))
+	}
+
+	return c.Send(message.String())
+}
+
+func (b *Bot) DeleteCommand(c tele.Context) error {
+	ctx := context.Background()
+	fmt.Println("дернулась ручка MyCommands")
+
+	if err := b.repo.ChangeState(ctx, c.Sender().ID, repo.DeleteCommand); err != nil {
+		return err
+	}
+
+	return c.Send("Введите название сценария, который хотите удалить")
+}
+
 func (b *Bot) CreateAction(c tele.Context) error {
 	ctx := context.Background()
 	fmt.Println("дернулась ручка CreateAction")
@@ -176,8 +210,12 @@ func (b *Bot) OnText(c tele.Context) error {
 		if err = b.CreateCommandText(ctx, c); err != nil {
 			return err
 		}
-
 		return c.Send("Ваш сценарий успешно заведен")
+	case repo.DeleteCommand:
+		if err = b.DeleteCommandService(ctx, c); err != nil {
+			return c.Send("Произошла ошибка при удалении сценария")
+		}
+		return c.Send("Ваш сценарий успешно удален")
 	}
 	return nil
 }
@@ -191,12 +229,25 @@ func (b *Bot) Start(c tele.Context) error {
 	return c.Send("Привет! Я бот, созданный Максимом Нечепоруком, Даней Узяновым и Даней Булыкиным для МИРЭА")
 }
 
+func (b *Bot) Exit(c tele.Context) error {
+	fmt.Println("дернулась ручка Exit")
+
+	err := b.repo.ChangeState(context.Background(), c.Sender().ID, 0)
+	if err != nil {
+		return err
+	}
+	return c.Send("Очистил ваше состояние")
+}
+
 func (b *Bot) Help(c tele.Context) error {
 	fmt.Println("дернулась ручка Help")
 
 	helpText := `Доступные команды:
 /start - Начать работу с ботом
-/addDevice - Добавить устройство
-/createCommand - Добавить сценарий умного устройства`
+/adddevice - Добавить устройство
+/createdommand - Добавить сценарий умного устройства
+/exit - Очистка состояний
+/mycommands - Мои сценарии
+/deletecommand - Удалить сценарий`
 	return c.Send(helpText)
 }
